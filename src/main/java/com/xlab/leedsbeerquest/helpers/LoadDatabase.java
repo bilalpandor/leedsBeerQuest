@@ -31,7 +31,8 @@ public class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(VenueRepository repository) throws IOException {
         //load CSV file
-        List<CsvFileEntry> entries = readFromCsvFile("C:\\Users\\bilal\\Documents\\Projects\\leedsbeerquest\\src\\main\\resources\\leedsbeerquest.csv");
+        List<CsvFileEntry> entries = readFromCsvFile("./src/main/resources/leedsbeerquest.csv");
+
 
         return args -> {
             entries.forEach(entry -> {

@@ -1,14 +1,18 @@
 package com.xlab.leedsbeerquest.controllers;
 
+import com.xlab.leedsbeerquest.entities.Review;
 import com.xlab.leedsbeerquest.entities.Venue;
 import com.xlab.leedsbeerquest.enums.ReviewCategory;
 import com.xlab.leedsbeerquest.exceptions.VenueNotFoundException;
 import com.xlab.leedsbeerquest.repository.VenueRepository;
 import com.xlab.leedsbeerquest.requestModels.RatingRequest;
+import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Stream.builder;
 
 @RestController
 public class VenuesController {
@@ -31,16 +35,24 @@ public class VenuesController {
     }
 
     @GetMapping("/venues/name/{name}")
-    Venue venueByName(@PathVariable String name) {
-        return repository.findByName(name)
-                .orElseThrow(() -> new VenueNotFoundException());
+    List<Venue> venueByName(@PathVariable String name) {
+        Venue example = Venue
+                .builder()
+                .name(name)
+                .build();
+        return repository.findAll(Example.of(example));
     }
 
 
     @GetMapping("/venues/reviewCategory/{category}")
     List<Venue> venueByReviewCategory(@PathVariable ReviewCategory category) {
-        return repository.findByReviewCategory(category.label)
-                .orElseThrow(() -> new VenueNotFoundException());
+        Venue example = Venue
+                .builder()
+                .review(Review.builder()
+                        .category(category.label)
+                        .build())
+                .build();
+        return repository.findAll(Example.of(example));
     }
 
     @PostMapping("/venues/rating/{ratingRequest}")
@@ -48,17 +60,37 @@ public class VenuesController {
         switch(ratingRequest.getRatingType()){
             case BEER_RATING:
             default:
-                return repository.findByBeerStars(ratingRequest.getRating())
-                        .orElseThrow(() -> new VenueNotFoundException());
+                Venue beerExample = Venue
+                        .builder()
+                        .review(Review.builder()
+                                .beerStars(ratingRequest.getRating())
+                                .build())
+                        .build();
+                return repository.findAll(Example.of(beerExample));
             case AMENITIES_RATING:
-                return repository.findByAmenitiesRating(ratingRequest.getRating())
-                        .orElseThrow(() -> new VenueNotFoundException());
+                Venue amenitiesExample = Venue
+                        .builder()
+                        .review(Review.builder()
+                                .amenitiesStars(ratingRequest.getRating())
+                                .build())
+                        .build();
+                return repository.findAll(Example.of(amenitiesExample));
             case ATMOSPHERE_RATING:
-                return repository.findByAtmosphereStars(ratingRequest.getRating())
-                        .orElseThrow(() -> new VenueNotFoundException());
+                Venue atmosphereExample = Venue
+                        .builder()
+                        .review(Review.builder()
+                                .atmosphereStars(ratingRequest.getRating())
+                                .build())
+                        .build();
+                return repository.findAll(Example.of(atmosphereExample));
             case VALUE_RATING:
-                return repository.findByValueRating(ratingRequest.getRating())
-                        .orElseThrow(() -> new VenueNotFoundException());
+                Venue valueExample = Venue
+                        .builder()
+                        .review(Review.builder()
+                                .valueStars(ratingRequest.getRating())
+                                .build())
+                        .build();
+                return repository.findAll(Example.of(valueExample));
         }
     }
 
@@ -72,7 +104,7 @@ public class VenuesController {
 
         return repository.findById(id)
                 .map(venue -> {
-                    return repository.save(venue);
+                    return repository.save(newVenue);
                 })
                 .orElseGet(() -> {
                     newVenue.setId(id);
@@ -85,7 +117,7 @@ public class VenuesController {
 
         return repository.findByName(name)
                 .map(venue -> {
-                    return repository.save(venue);
+                    return repository.save(newVenue);
                 })
                 .orElseGet(() -> {
                     return repository.save(newVenue);

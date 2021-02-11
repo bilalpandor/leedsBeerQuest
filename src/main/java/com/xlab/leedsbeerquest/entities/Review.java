@@ -1,11 +1,19 @@
 package com.xlab.leedsbeerquest.entities;
 
+import jdk.jfr.DataAmount;
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.util.Date;
 
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Review {
 
@@ -18,10 +26,7 @@ public class Review {
     private Double atmosphereStars;
     private Double amenitiesStars;
     private Double valueStars;
-
-    @OneToOne(mappedBy = "review") private Venue venue;
-
-    public Review() {}
+    private @OneToOne(mappedBy = "review") @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE) Venue venue;
 
     public Review(String category, String url, Date date, String excerpt, Double beerStars, Double atmosphereStars, Double amenitiesStars, Double valueStars) {
         this.category = category;
@@ -31,78 +36,6 @@ public class Review {
         this.beerStars = beerStars;
         this.atmosphereStars = atmosphereStars;
         this.amenitiesStars = amenitiesStars;
-        this.valueStars = valueStars;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getExcerpt() {
-        return excerpt;
-    }
-
-    public void setExcerpt(String excerpt) {
-        this.excerpt = excerpt;
-    }
-
-    public Double getBeerStars() {
-        return beerStars;
-    }
-
-    public void setBeerStars(Double beerStars) {
-        this.beerStars = beerStars;
-    }
-
-    public Double getAtmosphereStars() {
-        return atmosphereStars;
-    }
-
-    public void setAtmosphereStars(Double atmosphereStars) {
-        this.atmosphereStars = atmosphereStars;
-    }
-
-    public Double getAmenitiesStars() {
-        return amenitiesStars;
-    }
-
-    public void setAmenitiesStars(Double amenitiesStars) {
-        this.amenitiesStars = amenitiesStars;
-    }
-
-    public Double getValueStars() {
-        return valueStars;
-    }
-
-    public void setValueStars(Double valueStars) {
         this.valueStars = valueStars;
     }
 }

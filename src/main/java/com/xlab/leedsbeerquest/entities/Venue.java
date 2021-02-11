@@ -1,8 +1,16 @@
 package com.xlab.leedsbeerquest.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Venue {
 
@@ -14,8 +22,6 @@ public class Venue {
     private @OneToOne(cascade = CascadeType.ALL)  @JoinColumn(name = "review_id", referencedColumnName = "id") Review review;
     private ArrayList<String> tags;
     private String venueImage;
-
-    public Venue() {}
 
     public Venue (String name, Address address, String phoneNumber, String twitterHandle, Review review, ArrayList<String> tags, String venueImage) {
         this.name = name;
